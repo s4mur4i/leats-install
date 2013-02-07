@@ -1,0 +1,8 @@
+[user]
+	name = s4mur4i
+	email = admin@szamuraj.com
+[core]
+	editor = vim
+	excludesfile = /root/.gitignore
+[merge]
+	tool = vimdiff

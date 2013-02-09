@@ -6,6 +6,33 @@
 #
 ####
 # Functions
+do_mount() {
+    mkdir /target >$OUT 2>&1
+    mount $TARGET"2" /target >$OUT 2>&1
+    mkdir -p /target/boot >$OUT 2>&1
+    mount $TARGET"1" /target/boot >$OUT 2>&1
+}
+
+do_umount() {
+    umount /target/boot >$OUT 2>&1
+    umount /target >$OUT 2>&1
+}
+
+check_mount() {
+    grep -q "/target" /proc/mounts
+    ret=$?
+    if [ $ret -eq 0 ]; then
+        grep -q "/target/boot" /proc/mounts
+        ret=$?
+        if [ $ret -eq 0 ]; then
+            echo 0
+        else
+            echo 1
+        fi
+    else
+        echo 1
+    fi
+}
 
 usage() {
     cat <<EOF
@@ -67,6 +94,22 @@ echo "Created, Doing Filesystem."
 mkfs $TARGET"1" >$OUT 2>&1
 mkfs $TARGET"2" >$OUT 2>&1
 echo "Created Filesystems."
-echo "Checking target"
-mkdir -p /target/boot
+echo "Creating target and mounting filesystem"
+do_mount
+ret=$(check_mount)
+if [ $ret -eq 0 ]; then
+    echo "Created target and mounted."
+else
+    echo "Mount failded for some reason."
+fi
 
+###### 
+# Breaking down Environment
+echo "Umounting filesystems"
+do_umount
+ret=$(check_mount)
+if [ $ret -eq 1 ];then
+    echo "Done umounting"
+else
+    echo "Umount unsuccesful."
+fi

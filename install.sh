@@ -141,14 +141,27 @@ $INSTALL /rpm/ethtool-2.6.33-0.3.el6.x86_64.rpm \
         /rpm/libselinux-2.0.94-5.3.el6.x86_64.rpm \
         /rpm/libsepol-2.0.41-4.el6.x86_64.rpm
 
+### /var/lib/random-seed needed  for initscripts
+mkdir -p /target/var/lib
+cp /var/lib/random-seed /target/var/lib/random-seed
 $INSTALL /rpm/coreutils-8.4-19.el6.x86_64.rpm \
 		/rpm/coreutils-libs-8.4-19.el6.x86_64.rpm \
 		/rpm/policycoreutils-2.0.83-19.24.el6.x86_64.rpm \
 		/rpm/libselinux-utils-2.0.94-5.3.el6.x86_64.rpm \
 		/rpm/libacl-2.2.49-6.el6.x86_64.rpm \
-		/rpm/gnome-keyring-pam-2.28.2-7.el6.x86_64.rpm \
 		/rpm/audit-libs-2.2-2.el6.x86_64.rpm \
+        /rpm/python-libs-2.6.6-29.el6_3.3.x86_64.rpm \
+        /rpm/ca-certificates-2010.63-3.el6_1.5.noarch.rpm \
+        /rpm/sysvinit-tools-2.87-4.dsf.el6.x86_64.rpm \
 		/rpm/cracklib-dicts-2.8.16-4.el6.x86_64.rpm \
+        /rpm/nss-softokn-3.12.9-11.el6.x86_64.rpm \
+        /rpm/lua-5.1.4-4.1.el6.x86_64.rpm \
+        /rpm/less-436-10.el6.x86_64.rpm \
+        /rpm/gamin-0.1.10-9.el6.x86_64.rpm \
+        /rpm/hwdata-0.233-7.8.el6.noarch.rpm \
+        /rpm/nss-sysinit-3.13.5-1.el6_3.x86_64.rpm \
+        /rpm/nss-tools-3.13.5-1.el6_3.x86_64.rpm \
+        /rpm/nss-util-3.13.5-1.el6_3.x86_64.rpm \
 		/rpm/cracklib-2.8.16-4.el6.x86_64.rpm \
 		/rpm/libcap-ng-0.6.4-3.el6_0.1.x86_64.rpm \
 		/rpm/chkconfig-1.3.49.3-2.el6.x86_64.rpm \
@@ -185,11 +198,41 @@ $INSTALL /rpm/coreutils-8.4-19.el6.x86_64.rpm \
         /rpm/initscripts-9.03.31-2.el6.centos.1.x86_64.rpm \
         /rpm/diffutils-2.8.1-28.el6.x86_64.rpm \
         /rpm/checkpolicy-2.0.22-1.el6.x86_64.rpm \
-		/rpm/iputils-20071127-16.el6.x86_64.rpm 
-
-$INSTALL /rpm/rpm-4.8.0-27.el6.x86_64.rpm \
+        /rpm/expat-2.0.1-11.el6_2.x86_64.rpm \
+		/rpm/iputils-20071127-16.el6.x86_64.rpm \
+        /rpm/rpm-4.8.0-27.el6.x86_64.rpm \
         /rpm/elfutils-libelf-0.152-1.el6.x86_64.rpm \
         /rpm/rpm-libs-4.8.0-27.el6.x86_64.rpm \
+        /rpm/gzip-1.3.12-18.el6.x86_64.rpm \
+        /rpm/libutempter-1.1.5-4.1.el6.x86_64.rpm \
+        /rpm/libblkid-2.17.2-12.7.el6.x86_64.rpm \
+        /rpm/libcom_err-1.41.12-12.el6.x86_64.rpm \
+        /rpm/nss-3.13.5-1.el6_3.x86_64.rpm \
+        /rpm/libuuid-2.17.2-12.7.el6.x86_64.rpm \
+        /rpm/libsemanage-2.0.43-4.1.el6.x86_64.rpm \
+        /rpm/dbus-glib-0.86-5.el6.x86_64.rpm \
+        /rpm/libffi-3.0.5-3.2.el6.x86_64.rpm \
+        /rpm/curl-7.19.7-26.el6_2.4.x86_64.rpm \
+        /rpm/libcurl-7.19.7-26.el6_2.4.x86_64.rpm \
+        /rpm/dbus-libs-1.2.24-7.el6_3.x86_64.rpm \
+        /rpm/nspr-4.9.1-2.el6_3.x86_64.rpm \
+        /rpm/groff-1.18.1.4-21.el6.x86_64.rpm \
+        /rpm/module-init-tools-3.9-20.el6.x86_64.rpm \
+        /rpm/libusb-0.1.12-23.el6.x86_64.rpm \
+        /rpm/iptables-1.4.7-5.1.el6_2.x86_64.rpm \
+        /rpm/libss-1.41.12-12.el6.x86_64.rpm \
+        /rpm/libssh2-1.2.2-11.el6_3.x86_64.rpm \
+        /rpm/ustr-1.0.4-9.1.el6.x86_64.rpm \
+        /rpm/libidn-1.18-2.el6.x86_64.rpm \
+        /rpm/logrotate-3.7.8-15.el6.x86_64.rpm \
+        /rpm/cpio-2.10-10.el6.x86_64.rpm \
+        /rpm/libnih-1.0.1-7.el6.x86_64.rpm \
+        /rpm/cyrus-sasl-lib-2.1.23-13.el6.x86_64.rpm \
+        /rpm/upstart-0.6.5-12.el6.x86_64.rpm \
+        /rpm/xz-libs-4.999.9-0.3.beta.20091007git.el6.x86_64.rpm \
+        /rpm/file-libs-5.04-13.el6.x86_64.rpm \
+        /rpm/openldap-2.4.23-26.el6_3.2.x86_64.rpm \
+        /rpm/binutils-2.20.51.0.2-5.34.el6.x86_64.rpm \
         /rpm/sqlite-3.6.20-1.el6.x86_64.rpm
 
 $INSTALL /rpm/yum-3.2.29-30.el6.centos.noarch.rpm \
@@ -201,6 +244,13 @@ $INSTALL /rpm/yum-3.2.29-30.el6.centos.noarch.rpm \
 		/rpm/libxml2-2.7.6-8.el6_3.3.x86_64.rpm \
 		/rpm/libxml2-python-2.7.6-8.el6_3.3.x86_64.rpm \
 		/rpm/python-urlgrabber-3.9.1-8.el6.noarch.rpm \
+        /rpm/pygpgme-0.1-18.20090824bzr68.el6.x86_64.rpm \
+        /rpm/gpgme-1.1.8-3.el6.x86_64.rpm \
+        /rpm/gnupg2-2.0.14-4.el6.x86_64.rpm \
+        /rpm/libgpg-error-1.7-4.el6.x86_64.rpm \
+        /rpm/pth-2.0.7-9.3.el6.x86_64.rpm \
+        /rpm/deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm \
+        /rpm/python-pycurl-7.19.0-8.el6.x86_64.rpm \
 		/rpm/python-iniparse-0.3.1-2.1.el6.noarch.rpm
 		
 $INSTALL /rpm/rootfiles-8.1-6.1.el6.noarch.rpm \

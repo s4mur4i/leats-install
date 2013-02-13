@@ -11,9 +11,15 @@ do_mount() {
     mount $TARGET"2" /target >$OUT 2>&1
     mkdir -p /target/boot >$OUT 2>&1
     mount $TARGET"1" /target/boot >$OUT 2>&1
+    mount --bind /dev /target/dev >$OUT 2>&1
+    mount -t proc none /target/proc >$OUT 2>&1
+    mount -t sysfs none /target/sys >$OUT 2>&1
 }
 
 do_umount() {
+    umount /target/dev >$OUT 2>&1
+    umount /target/proc >$OUT 2>&1
+    umount /target/sys >$OUT 2>&1
     umount /target/boot >$OUT 2>&1
     umount /target >$OUT 2>&1
 }
@@ -48,8 +54,8 @@ EOF
 # Variables
 TARGET=/dev/sdb
 OUT=/dev/null
-#export INSTALL='rpm --root /target -i '
-export INSTALL='rpm --root /target  --nodeps -vhi '
+export INSTALL='rpm --root /target -vhi '
+#export INSTALL='rpm --root /target  --nodeps -vhi '
 
 while getopts "t:hv" OPTION
 do
@@ -144,7 +150,6 @@ $INSTALL /rpm/coreutils-8.4-19.el6.x86_64.rpm \
 		/rpm/audit-libs-2.2-2.el6.x86_64.rpm \
 		/rpm/cracklib-dicts-2.8.16-4.el6.x86_64.rpm \
 		/rpm/cracklib-2.8.16-4.el6.x86_64.rpm \
-		/rpm/cracklib-dicts-2.8.16-4.el6.x86_64.rpm \
 		/rpm/libcap-ng-0.6.4-3.el6_0.1.x86_64.rpm \
 		/rpm/chkconfig-1.3.49.3-2.el6.x86_64.rpm \
 		/rpm/python-2.6.6-29.el6_3.3.x86_64.rpm \
@@ -175,6 +180,11 @@ $INSTALL /rpm/coreutils-8.4-19.el6.x86_64.rpm \
 		/rpm/psmisc-22.6-15.el6_0.1.x86_64.rpm \
 		/rpm/procps-3.2.8-23.el6.x86_64.rpm \
         /rpm/rsyslog-5.8.10-2.el6.x86_64.rpm \
+        /rpm/gmp-4.3.1-7.el6_2.2.x86_64.rpm \
+        /rpm/pam-1.1.1-10.el6_2.1.x86_64.rpm \
+        /rpm/initscripts-9.03.31-2.el6.centos.1.x86_64.rpm \
+        /rpm/diffutils-2.8.1-28.el6.x86_64.rpm \
+        /rpm/checkpolicy-2.0.22-1.el6.x86_64.rpm \
 		/rpm/iputils-20071127-16.el6.x86_64.rpm 
 
 $INSTALL /rpm/rpm-4.8.0-27.el6.x86_64.rpm \
@@ -193,7 +203,8 @@ $INSTALL /rpm/yum-3.2.29-30.el6.centos.noarch.rpm \
 		/rpm/python-urlgrabber-3.9.1-8.el6.noarch.rpm \
 		/rpm/python-iniparse-0.3.1-2.1.el6.noarch.rpm
 		
-$INSTALL /rpm/rootfiles-8.1-6.1.el6.noarch.rpm
+$INSTALL /rpm/rootfiles-8.1-6.1.el6.noarch.rpm \
+        /rpm/file-libs-5.04-13.el6.x86_64.rpm
 ######
 # Note to self.
 # echo "what" | sed 's/ /\

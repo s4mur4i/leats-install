@@ -107,17 +107,40 @@ echo "Creating LFS directories"
 mkdir -pv $LFS >$OUT 2>&1
 mount -v -t ext3 ${TARGET}1 $LFS >$OUT 2>&1
 echo "Mounted partitions"
-## FIXME download the rpms and us it for install 
+$BASE/packages.sh
 mkdir -pv $LFS/var/tmp/chroot/var/lib/rpm
 rpm --rebuilddb --root=$LFS
 wget http://mirror.centos.org/centos/6.3/os/x86_64/Packages/centos-release-6-3.el6.centos.9.x86_64.rpm -P $LFS
 rpm -i --root=$LFS --nodeps $LFS/centos-release-6-3.el6.centos.9.x86_64.rpm
-yum --installroot=$LFS install -y rpm-build yum
+mkdir -pv $LFS/repo
+createrepo $LFS/repo
+cp /mnt/rpm/* $LFS/repo
+echo "[localrepo]
+name=RPM for installing
+baseurl=file:///repo/
+enabled=1
+gpgcheck=0" > $LFS/etc/yum.repos.d/local.repo
+yum --installroot=$LFS install --disablerepo=* --enablerepo=localrepo -y rpm-build yum
 echo "Finished base system"
+mkdir -pv $LFS/proc
+mkdir -pv $LFS/dev
 mount --bind /proc $LFS/proc
 mount --bind /dev $LFS/dev
 cp /etc/resolv.conf $LFS/etc/resolv.conf
 echo "Get the list of required packages"
-PACKAGE=`cat $BASE/desktop_list | xargs echo`
-yum --installroot=$LFS install -y $PACKAGE
+#PACKAGE=`cat $BASE/desktop_list | xargs echo`
+#yum --installroot=$LFS install -y $PACKAGE
 #grub-install $TARGET
+RPM=`ls -1 /mnt/rpm/*.rpm | xargs echo`
+rpm -iv --replacepkgs --root=$LFS --nodeps $RPM
+echo "(hd0)	/dev/sda" >$LFS/boot/grub/device.map
+echo -e "default=0\n
+timeout=5\n
+splashimage=(hd0,0)/grub/splash.xpm.gz\n
+hiddenmenu\n
+title CentOS (2.6.32-279.el6.x86_64)\n
+\troot (hd0,0)\n
+\tkernel /vmlinuz-2.6.32-279.el6.x86_64 ro root=UUID=c13b98e8-f346-40b4-b6f9-e72bf43e99e1 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet\n
+\tinitrd /initramfs-2.6.32-279.el6.x86_64.img" >$LFS/boot/grub/grub.conf
+grub-install --root-directory=$LFS $TARGET
+#rpm --root $LFS -vhi

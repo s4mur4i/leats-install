@@ -120,4 +120,4 @@ cp /etc/resolv.conf $LFS/etc/resolv.conf
 echo "Get the list of required packages"
 PACKAGE=`cat $BASE/desktop_list | xargs echo`
 yum --installroot=$LFS install -y $PACKAGE
-grub-install --root-directory=$LFS $TARGET
+#grub-install $TARGET

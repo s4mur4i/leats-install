@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash -x
+set -e
 yum install -y createrepo >/dev/null 2>&1
 rm -rf /mnt/repo || echo "Repo doesn't exist to delete"
 MIRROR=http://mirror.centos.org/centos-6/6.3/os/x86_64/Packages
@@ -20,6 +21,7 @@ for RPM in `cat $BASE/desktop_list`; do
 		ret=$?
 		    if [ $ret -ne 0 ]; then
 				echo "Error Downloading a package: $RPM" >>$DEST/error 2>&1
+				exit 1
 			fi
 	fi
 done

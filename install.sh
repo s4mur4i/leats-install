@@ -33,6 +33,7 @@ TARGET=/dev/sdb
 OUT=/dev/null
 LFS=/mnt/lfs
 BASE=`dirname $0`
+RPM=/mnt/rpm
 
 while getopts "t:hv" OPTION
 do
@@ -110,16 +111,17 @@ echo "Mounted partitions"
 $BASE/packages.sh
 mkdir -pv $LFS/var/tmp/chroot/var/lib/rpm
 rpm --rebuilddb --root=$LFS
-wget http://mirror.centos.org/centos/6.3/os/x86_64/Packages/centos-release-6-3.el6.centos.9.x86_64.rpm -P $LFS
-rpm -i --root=$LFS --nodeps $LFS/centos-release-6-3.el6.centos.9.x86_64.rpm
+rpm -i --root=$LFS --nodeps $RPM/centos-release-6-3.el6.centos.9.x86_64.rpm
 mkdir -pv $LFS/repo
 createrepo $LFS/repo
-cp /mnt/rpm/* $LFS/repo
+cp $RPM/* $LFS/repo
 echo "[localrepo]
 name=RPM for installing
-baseurl=file:///repo/
+baseurl=file://$LFS/repo/
 enabled=1
 gpgcheck=0" > $LFS/etc/yum.repos.d/local.repo
+createrepo $LFS/repo
+yum --installroot=$LFS --disablerepo=* --enablerepo=localrepo clean all
 yum --installroot=$LFS install --disablerepo=* --enablerepo=localrepo -y rpm-build yum
 echo "Finished base system"
 mkdir -pv $LFS/proc
@@ -131,7 +133,16 @@ echo "Get the list of required packages"
 #PACKAGE=`cat $BASE/desktop_list | xargs echo`
 #yum --installroot=$LFS install -y $PACKAGE
 #grub-install $TARGET
-RPM=`ls -1 /mnt/rpm/*.rpm | xargs echo`
+### Create some required files
+echo "/dev/sda1 /	ext4	defaults	1 1
+/dev/sda2 swap                    swap    defaults        0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
+
+" > $LFS/etc/fstab
+RPM=`ls -1 $RPM/*.rpm | xargs echo`
 rpm -iv --replacepkgs --root=$LFS --nodeps $RPM
 echo "(hd0)	/dev/sda" >$LFS/boot/grub/device.map
 echo -e "default=0\n
@@ -142,5 +153,5 @@ title CentOS (2.6.32-279.el6.x86_64)\n
 \troot (hd0,0)\n
 \tkernel /vmlinuz-2.6.32-279.el6.x86_64 ro root=UUID=c13b98e8-f346-40b4-b6f9-e72bf43e99e1 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet\n
 \tinitrd /initramfs-2.6.32-279.el6.x86_64.img" >$LFS/boot/grub/grub.conf
-grub-install --root-directory=$LFS $TARGET
+grub-install --recheck --root-directory=$LFS $TARGET
 #rpm --root $LFS -vhi

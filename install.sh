@@ -132,18 +132,13 @@ mount --bind /proc $LFS/proc
 mount --bind /dev $LFS/dev
 cp /etc/resolv.conf $LFS/etc/resolv.conf
 echo "Get the list of required packages"
-#PACKAGE=`cat $BASE/desktop_list | xargs echo`
-#yum --installroot=$LFS install -y $PACKAGE
-#grub-install $TARGET
 ### Create some required files
 echo "/dev/sda1 /	ext4	defaults	1 1
 /dev/sda2 swap                    swap    defaults        0 0
 tmpfs                   /dev/shm                tmpfs   defaults        0 0
 devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
 sysfs                   /sys                    sysfs   defaults        0 0
-proc                    /proc                   proc    defaults        0 0
-
-" > $LFS/etc/fstab
+proc                    /proc                   proc    defaults        0 0" > $LFS/etc/fstab
 RPM=`ls -1 $RPM/*.rpm | xargs echo`
 rpm -iv --replacepkgs --root=$LFS --nodeps $RPM
 echo "(hd0)	/dev/sda" >$LFS/boot/grub/device.map
@@ -156,7 +151,11 @@ title CentOS (2.6.32-279.el6.x86_64)\n
 \tkernel /boot/vmlinuz-2.6.32-279.9.1.el6.x86_64 ro root=/dev/sda1 rdshell\n
 \tinitrd /boot/initramfs-2.6.32-279.9.1.el6.x86_64.img\n" >$LFS/boot/grub/grub.conf
 grub-install --recheck --root-directory=$LFS $TARGET
+echo "Configuring the system"
 ## Set selinux
 echo "SELINUX=disabled
 SELINUXTYPE=targeted" > $LFS/etc/selinux/config
-chroot $LFS mkinitrd -f --with=sd_mod --with=libata /boot/initrd-2.6.32-279.9.1.el6.x86_64.img 2.6.32-279.9.1.el6.x86_64
+#chroot $LFS mkinitrd -f --with=sd_mod --with=libata /boot/initrd-2.6.32-279.9.1.el6.x86_64.img 2.6.32-279.9.1.el6.x86_64
+echo "Start with gui"
+echo "id:5:initdefault:" > $LFS/etc/inittab
+

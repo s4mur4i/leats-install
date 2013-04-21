@@ -158,4 +158,8 @@ SELINUXTYPE=targeted" > $LFS/etc/selinux/config
 #chroot $LFS mkinitrd -f --with=sd_mod --with=libata /boot/initrd-2.6.32-279.9.1.el6.x86_64.img 2.6.32-279.9.1.el6.x86_64
 echo "Start with gui"
 echo "id:5:initdefault:" > $LFS/etc/inittab
-
+## Configuring network
+echo "Network configure"
+## Leats install
+echo "Installing Leats"
+git clone git://github.com/s4mur4i/leats-scripts.git $LFS/leats

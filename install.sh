@@ -85,6 +85,8 @@ if [ $max -gt 12 ] ;then
 	1
 
 	+10G
+	a
+	1
 	n
 	p
 	2
@@ -151,7 +153,10 @@ splashimage=(hd0,0)/boot/grub/splash.xpm.gz\n
 hiddenmenu\n
 title CentOS (2.6.32-279.el6.x86_64)\n
 \troot (hd0,0)\n
-\tkernel /boot/vmlinuz-2.6.32-279.9.1.el6.x86_64 ro root=UUID=c13b98e8-f346-40b4-b6f9-e72bf43e99e1 rd_NO_LUKS rd_NO_LVM LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet\n
+\tkernel /boot/vmlinuz-2.6.32-279.9.1.el6.x86_64 ro root=/dev/sda1 rdshell\n
 \tinitrd /boot/initramfs-2.6.32-279.9.1.el6.x86_64.img\n" >$LFS/boot/grub/grub.conf
 grub-install --recheck --root-directory=$LFS $TARGET
-#rpm --root $LFS -vhi
+## Set selinux
+echo "SELINUX=disabled
+SELINUXTYPE=targeted" > $LFS/etc/selinux/config
+chroot $LFS mkinitrd -f --with=sd_mod --with=libata /boot/initrd-2.6.32-279.9.1.el6.x86_64.img 2.6.32-279.9.1.el6.x86_64
